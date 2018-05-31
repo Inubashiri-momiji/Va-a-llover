@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 import io.realm.RealmObject;
 
-public class Sys extends RealmObject implements Serializable {
+public class Sys extends RealmObject {
 
     @SerializedName("pod")
     @Expose

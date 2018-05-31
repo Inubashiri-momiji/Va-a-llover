@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 import io.realm.RealmObject;
 
-public class Weather extends RealmObject implements Serializable {
+public class Weather extends RealmObject {
 
     @SerializedName("id")
     @Expose

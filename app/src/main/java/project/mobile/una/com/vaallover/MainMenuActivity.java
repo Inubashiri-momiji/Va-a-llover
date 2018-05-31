@@ -43,6 +43,8 @@ public class MainMenuActivity extends AppCompatActivity {
      * We use a {@link FragmentPagerAdapter} derivative, which will keep every loaded fragment in memory.
      * If this becomes too memory intensive, it may be best to switch to a {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
+    Toolbar toolbar;
+    FloatingActionButton fab;
     ServiceHandler handler;
     Map<String, Object> params;
     SectionsPagerAdapter mSectionsPagerAdapter;
@@ -59,30 +61,26 @@ public class MainMenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        init();
         setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        currentWeather = new WeatherCurrentContainer();
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), this, currentWeather);
 
-        // Initialize Realm (just once per application)
-        Realm.init(this);
         realm = Realm.getDefaultInstance();
-        RealmConfiguration config = new RealmConfiguration.Builder().build();
         currentWeather = realm.where(WeatherCurrentContainer.class).findFirst();
-        String test;
-        if (currentWeather != null)
-            test = currentWeather.getName();
+
+        if (currentWeather == null) {
+            realm.beginTransaction();
+            currentWeather = realm.createObject(WeatherCurrentContainer.class);
+            realm.commitTransaction();
+        }
+
         // Set up the ViewPager with the sections adapter.
-        mViewPager = findViewById(R.id.pageViewContainer);
+
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mSectionsPagerAdapter.notifyDataSetChanged();
                 if (isLocationEnabled())  //Si tiene el gps encendido entonces
                         enableLocationTrack();
                 else
@@ -90,80 +88,14 @@ public class MainMenuActivity extends AppCompatActivity {
             }
         });
 
-
-        handler = new ServiceHandler();
-        params = new ArrayMap<>();
-
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                double Latitude = location.getLatitude();
-                double Longitude = location.getLongitude();
-                params.put("APPID","63dc9dd7b6386052325bd9c6885402a0");
-                params.put("lat", Latitude);
-                params.put("lon", Longitude);
-                //LatLng coordinates = new LatLng( location.getLatitude(),location.getLongitude());
-
-                //handler.objectRequest("http://api.openweathermap.org/data/2.5/forecast", Request.Method.GET, params, WeatherForecastContainer.class, new Response.Listener<WeatherForecastContainer>() {
-                handler.objectRequest("http://api.openweathermap.org/data/2.5/weather", Request.Method.GET, params, WeatherCurrentContainer.class, new Response.Listener<WeatherCurrentContainer>() {
-                    @Override
-                    public void onResponse(WeatherCurrentContainer response) {
-
-                        // Persist your data in a transaction
-                        realm.beginTransaction();
-                        realm.deleteAll();
-                        currentWeather = realm.copyFromRealm(response);
-                        realm.commitTransaction();
-
-                        mSectionsPagerAdapter.updateData(currentWeather);
-                        mSectionsPagerAdapter.notifyDataSetChanged();
-
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        //en caso de problemas ejecutar esto
-                        Log.d("my Weather", error.toString());
-                    }
-                });
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        };
-
         if (!hasPermissions(this, PERMISSIONS)) {
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
         }
 
-        if (isLocationEnabled()) { //Si tiene el gps encendido entonces
-            if (currentWeather == null) //Obtenga el clima de la ubicacion
-                enableLocationTrack();
-            else{ //caso contrario utiliza el almacenado
-                mSectionsPagerAdapter.updateData(currentWeather);
-                mSectionsPagerAdapter.notifyDataSetChanged();
-            }
-        }
+        if (isLocationEnabled())  //Si tiene el gps encendido entonces
+            enableLocationTrack();
         else
-            if (currentWeather == null) //caso contrario si no se tiene almacenado nada,
-                checkGPSAlert(); //enviar alerta
-            else{ //caso contrario utiliza el almacenado
-                    mSectionsPagerAdapter.updateData(currentWeather);
-                    mSectionsPagerAdapter.notifyDataSetChanged();
-            }
+            checkGPSAlert(); //enviar alerta
     }
 
 
@@ -191,14 +123,14 @@ public class MainMenuActivity extends AppCompatActivity {
 
     public void onResume() {
         super.onResume();
-        if (realm.isClosed())
-            Realm.init(this);
+        if (realm.isClosed()) {
+            realm = Realm.getDefaultInstance();
+        }
 
         if (isLocationEnabled()) { //Si tiene el gps encendido entonces
             if (currentWeather == null) //Obtenga el clima de la ubicacion
                 enableLocationTrack();
             else{ //caso contrario utiliza el almacenado
-                mSectionsPagerAdapter.updateData(currentWeather);
                 mSectionsPagerAdapter.notifyDataSetChanged();
             }
         }
@@ -206,9 +138,9 @@ public class MainMenuActivity extends AppCompatActivity {
         if (currentWeather == null) //caso contrario si no se tiene almacenado nada,
             checkGPSAlert(); //enviar alerta
         else{ //caso contrario utiliza el almacenado
-            mSectionsPagerAdapter.updateData(currentWeather);
             mSectionsPagerAdapter.notifyDataSetChanged();
         }
+
 
     }
 
@@ -230,6 +162,8 @@ public class MainMenuActivity extends AppCompatActivity {
         realm.close();
         super.onDestroy();
     }
+
+
 
     public void checkGPSAlert(){
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
@@ -267,8 +201,81 @@ public class MainMenuActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED)
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                    10, 100, locationListener);
+                    0, 100, locationListener);
+        else
+            if (!hasPermissions(this, PERMISSIONS)) {
+                ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+            }
     }
 
+
+
+    private void requestWeather(){
+        //handler.objectRequest("http://api.openweathermap.org/data/2.5/forecast", Request.Method.GET, params, WeatherForecastContainer.class, new Response.Listener<WeatherForecastContainer>() {
+        handler.objectRequest("http://api.openweathermap.org/data/2.5/weather", Request.Method.GET, params, WeatherCurrentContainer.class, new Response.Listener<WeatherCurrentContainer>() {
+            @Override
+            public void onResponse(WeatherCurrentContainer response) {
+
+                // Persist your data in a transaction
+                realm.beginTransaction();
+                realm.deleteAll();
+                realm.insert(response);
+                realm.commitTransaction();
+                mSectionsPagerAdapter.notifyDataSetChanged();
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //en caso de problemas ejecutar esto
+                Log.d("my Weather", error.toString());
+            }
+        });
+    }
+
+    private void init(){
+
+        toolbar = findViewById(R.id.toolbar);
+        mViewPager = findViewById(R.id.pageViewContainer);
+        fab = findViewById(R.id.fab);
+        // Create the adapter that will return a fragment for each of the three
+        // primary sections of the activity.
+        currentWeather = new WeatherCurrentContainer();
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        // Initialize Realm (just once per application)
+        Realm.init(this);
+        handler = new ServiceHandler();
+        params = new ArrayMap<>();
+
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                double Latitude = location.getLatitude();
+                double Longitude = location.getLongitude();
+                params.clear();
+                params.put("APPID","63dc9dd7b6386052325bd9c6885402a0");
+                params.put("lat", Latitude);
+                params.put("lon", Longitude);
+                //requestWeather();
+                mSectionsPagerAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+    }
 
 }

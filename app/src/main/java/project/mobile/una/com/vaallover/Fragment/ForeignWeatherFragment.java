@@ -66,7 +66,7 @@ public class ForeignWeatherFragment extends Fragment implements FragmentUpdate {
     }
 
     @Override
-    public void update(Object obj) {
-        weather = (WeatherForecastContainer) obj;
+    public void update() {
+
     }
 }

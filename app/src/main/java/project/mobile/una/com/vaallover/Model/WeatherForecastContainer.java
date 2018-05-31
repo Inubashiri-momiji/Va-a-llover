@@ -9,7 +9,7 @@ import java.io.Serializable;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 
-public class WeatherForecastContainer extends RealmObject implements Serializable {
+public class WeatherForecastContainer extends RealmObject {
 
     @SerializedName("cod")
     @Expose

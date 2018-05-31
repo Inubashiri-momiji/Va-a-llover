@@ -9,7 +9,7 @@ import java.io.Serializable;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 
-public class List extends RealmObject implements Serializable {
+public class List extends RealmObject{
 
     @SerializedName("dt")
     @Expose

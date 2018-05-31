@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 import io.realm.RealmObject;
 
-public class Clouds extends RealmObject implements Serializable {
+public class Clouds extends RealmObject{
 
     @SerializedName("all")
     @Expose

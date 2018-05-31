@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 import io.realm.RealmObject;
 
-public class Wind extends RealmObject implements Serializable {
+public class Wind extends RealmObject{
 
     @SerializedName("speed")
     @Expose

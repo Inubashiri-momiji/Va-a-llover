@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 import io.realm.RealmObject;
 
-public class Coord extends RealmObject implements Serializable {
+public class Coord extends RealmObject{
 
     @SerializedName("lat")
     @Expose

@@ -7,7 +7,7 @@ import java.io.Serializable;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 
-public class WeatherCurrentContainer extends RealmObject implements Serializable {
+public class WeatherCurrentContainer extends RealmObject{
 
     @SerializedName("coord")
     @Expose

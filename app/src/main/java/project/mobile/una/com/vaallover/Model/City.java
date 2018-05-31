@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 import io.realm.RealmObject;
 
-public class City extends RealmObject implements Serializable  {
+public class City extends RealmObject{
 
     @SerializedName("id")
     @Expose

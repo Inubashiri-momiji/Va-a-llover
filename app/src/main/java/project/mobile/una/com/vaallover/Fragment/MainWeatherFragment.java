@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import io.realm.Realm;
 import project.mobile.una.com.vaallover.Model.Sys;
 import project.mobile.una.com.vaallover.Model.WeatherCurrentContainer;
 import project.mobile.una.com.vaallover.R;
@@ -18,6 +19,8 @@ public class MainWeatherFragment extends Fragment implements FragmentUpdate {
 
     TextView country, morningTime, eveningTime, pressure, currentTemperature, maxTemperature, minTemperature, wetness, wind, clouds;
     WeatherCurrentContainer weather;
+    Realm realm;
+    int updateCounter;
 
     public MainWeatherFragment() {
 
@@ -29,13 +32,32 @@ public class MainWeatherFragment extends Fragment implements FragmentUpdate {
         super.onCreate(savedInstanceState);
 
         assert getArguments() != null;
-        weather = (WeatherCurrentContainer) getArguments().getSerializable("weather");
+        realm = Realm.getDefaultInstance();
+    }
+
+    @Override
+    public void onStop() {
+        realm.close();
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        realm.close();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (realm.isClosed()) {
+            realm = Realm.getDefaultInstance();
+        }
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main_menu, container, false);
-
         country = rootView.findViewById(R.id.main_menu_current_country);
         morningTime = rootView.findViewById(R.id.main_menu_morning);
         eveningTime = rootView.findViewById(R.id.main_menu_evening);
@@ -46,6 +68,18 @@ public class MainWeatherFragment extends Fragment implements FragmentUpdate {
         wetness = rootView.findViewById(R.id.main_menu_current_wetness);
         wind = rootView.findViewById(R.id.main_menu_current_wind);
         clouds = rootView.findViewById(R.id.main_menu_current_clouds);
+        update();
+
+
+        return rootView;
+    }
+
+    @Override
+    public void update() {
+        if (realm.isClosed()) {
+            realm = Realm.getDefaultInstance();
+        }
+        weather = realm.where(WeatherCurrentContainer.class).findFirst();
         try {
             country.setText(weather.getName());
             morningTime.setText(String.valueOf(weather.getSys().getSunrise()));
@@ -60,15 +94,5 @@ public class MainWeatherFragment extends Fragment implements FragmentUpdate {
         }catch (Exception e){
             clouds.getText();
         }
-
-
-
-        //textView.setText(getString(R.string.section_format, getArguments() != null ?  getArguments().getInt(ARG_SECTION_NUMBER) : 0));
-        return rootView;
-    }
-
-    @Override
-    public void update(Object obj) {
-        weather = (WeatherCurrentContainer) obj;
     }
 }

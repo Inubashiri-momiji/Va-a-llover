@@ -21,31 +21,17 @@ import project.mobile.una.com.vaallover.interfaces.FragmentUpdate;
  */
 public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
-    public static final int TOTAL_TABS = 2;
-    public WeatherCurrentContainer currentWeather;
-    public WeatherForecastContainer forecastWeather;
-    public Context mContext;
+    private static final int TOTAL_TABS = 2;
 
-    public SectionsPagerAdapter(FragmentManager fm, Context ctx, WeatherForecastContainer data) {
+    public SectionsPagerAdapter(FragmentManager fm) {
         super(fm);
-        forecastWeather = data;
-        mContext = ctx;
-    }
-    public SectionsPagerAdapter(FragmentManager fm, Context ctx, WeatherCurrentContainer data) {
-        super(fm);
-        currentWeather = data;
-        mContext = ctx;
     }
 
     @Override
     public Fragment getItem(int position) {
         switch (position){
             case 0:
-                Fragment tab1 = new MainWeatherFragment();
-                Bundle args1 = new Bundle();
-                args1.putSerializable("weather", currentWeather);
-                tab1.setArguments(args1);
-                return tab1;
+                return new MainWeatherFragment();
             case 1:
                 return PlaceholderFragment.newInstance(position);
 
@@ -54,27 +40,21 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
         }
     }
 
+
+
     @Override
     public int getItemPosition(@NonNull Object object) {
-        if (object instanceof MainWeatherFragment)
-            ((FragmentUpdate) object).update(currentWeather);
-        if (object instanceof ForeignWeatherFragment)
-            ((FragmentUpdate) object).update(forecastWeather);
-
+        if (object instanceof FragmentUpdate)
+            ((FragmentUpdate) object).update();
         return super.getItemPosition(object);
     }
 
+
+
     @Override
     public int getCount() {
-        // Show 2 total pages.
-        return 2;
+        return TOTAL_TABS;
     }
 
-    public void updateData(WeatherForecastContainer data){
-        forecastWeather = data;
-    }
 
-    public void updateData(WeatherCurrentContainer data){
-        currentWeather = data;
-    }
 }

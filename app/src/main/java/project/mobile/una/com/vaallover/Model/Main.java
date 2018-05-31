@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 import io.realm.RealmObject;
 
-public class Main extends RealmObject implements Serializable {
+public class Main extends RealmObject {
 
     @SerializedName("temp")
     @Expose

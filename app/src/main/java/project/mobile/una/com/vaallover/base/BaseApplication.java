@@ -1,5 +1,7 @@
 package project.mobile.una.com.vaallover.base;
 
+import android.app.Application;
+import android.content.Context;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
@@ -9,7 +11,7 @@ import com.android.volley.toolbox.Volley;
 
 import project.mobile.una.com.vaallover.utils.LruBitmapCache;
 
-public class BaseApplication{
+public class BaseApplication extends Application{
 
     public static final String TAG = BaseApplication.class
             .getSimpleName();
@@ -19,9 +21,9 @@ public class BaseApplication{
 
     private static BaseApplication mInstance;
 
-
+    @Override
     public void onCreate() {
-
+        super.onCreate();
         mInstance = this;
     }
 

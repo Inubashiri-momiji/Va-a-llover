@@ -10,7 +10,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.app.AlertDialog;
@@ -34,8 +33,7 @@ import java.util.Map;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import project.mobile.una.com.vaallover.Adapter.SectionsPagerAdapter;
-import project.mobile.una.com.vaallover.Model.WeatherContainer;
-import project.mobile.una.com.vaallover.base.BaseApplication;
+import project.mobile.una.com.vaallover.Model.WeatherCurrentContainer;
 import project.mobile.una.com.vaallover.service.ServiceHandler;
 
 public class MainMenuActivity extends AppCompatActivity {
@@ -55,6 +53,7 @@ public class MainMenuActivity extends AppCompatActivity {
     String[] PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
     // Get a Realm instance for this thread
     Realm realm;
+    WeatherCurrentContainer currentWeather;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,13 +64,17 @@ public class MainMenuActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        currentWeather = new WeatherCurrentContainer();
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), this, currentWeather);
 
         // Initialize Realm (just once per application)
         Realm.init(this);
         realm = Realm.getDefaultInstance();
         RealmConfiguration config = new RealmConfiguration.Builder().build();
-
+        currentWeather = realm.where(WeatherCurrentContainer.class).findFirst();
+        String test;
+        if (currentWeather != null)
+            test = currentWeather.getName();
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.pageViewContainer);
         mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -99,9 +102,16 @@ public class MainMenuActivity extends AppCompatActivity {
                 params.put("lon", Longitude);
                 //LatLng coordinates = new LatLng( location.getLatitude(),location.getLongitude());
 
-                handler.objectRequest("http://api.openweathermap.org/data/2.5/forecast", Request.Method.GET, params, WeatherContainer.class, new Response.Listener<WeatherContainer>() {
+                //handler.objectRequest("http://api.openweathermap.org/data/2.5/forecast", Request.Method.GET, params, WeatherForecastContainer.class, new Response.Listener<WeatherForecastContainer>() {
+                handler.objectRequest("http://api.openweathermap.org/data/2.5/weather", Request.Method.GET, params, WeatherCurrentContainer.class, new Response.Listener<WeatherCurrentContainer>() {
                     @Override
-                    public void onResponse(WeatherContainer response) {
+                    public void onResponse(WeatherCurrentContainer response) {
+
+                        // Persist your data in a transaction
+                        realm.beginTransaction();
+                        realm.deleteAll();
+                        realm.insert(response);
+                        realm.commitTransaction();
 
                     }
                 }, new Response.ErrorListener() {
@@ -133,10 +143,21 @@ public class MainMenuActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
         }
 
-        if (isLocationEnabled())
-            enableLocationTrack();
+        if (isLocationEnabled()) { //Si tiene el gps encendido entonces
+            if (currentWeather == null) //Obtenga el clima de la ubicacion
+                enableLocationTrack();
+            else{ //caso contrario utiliza el almacenado
+                mSectionsPagerAdapter.updateData(currentWeather);
+                mSectionsPagerAdapter.notifyDataSetChanged();
+            }
+        }
         else
-            checkGPSAlert();
+            if (currentWeather == null) //caso contrario si no se tiene almacenado nada,
+                checkGPSAlert(); //enviar alerta
+            else{ //caso contrario utiliza el almacenado
+                    mSectionsPagerAdapter.updateData(currentWeather);
+                    mSectionsPagerAdapter.notifyDataSetChanged();
+            }
     }
 
 
@@ -164,10 +185,21 @@ public class MainMenuActivity extends AppCompatActivity {
 
     public void onResume() {
         super.onResume();
-        if (isLocationEnabled())
-            enableLocationTrack();
+        if (isLocationEnabled()) { //Si tiene el gps encendido entonces
+            if (currentWeather == null) //Obtenga el clima de la ubicacion
+                enableLocationTrack();
+            else{ //caso contrario utiliza el almacenado
+                mSectionsPagerAdapter.updateData(currentWeather);
+                mSectionsPagerAdapter.notifyDataSetChanged();
+            }
+        }
         else
-            checkGPSAlert();
+        if (currentWeather == null) //caso contrario si no se tiene almacenado nada,
+            checkGPSAlert(); //enviar alerta
+        else{ //caso contrario utiliza el almacenado
+            mSectionsPagerAdapter.updateData(currentWeather);
+            mSectionsPagerAdapter.notifyDataSetChanged();
+        }
 
     }
 

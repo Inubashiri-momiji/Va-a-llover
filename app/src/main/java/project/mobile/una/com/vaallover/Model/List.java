@@ -5,8 +5,8 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 
 public class List extends RealmObject implements Serializable {
@@ -19,7 +19,7 @@ public class List extends RealmObject implements Serializable {
     private Main main;
     @SerializedName("weather")
     @Expose
-    private ArrayList<Weather> weather = null;
+    private RealmList<Weather> weather = null;
     @SerializedName("clouds")
     @Expose
     private Clouds clouds;
@@ -54,7 +54,7 @@ public class List extends RealmObject implements Serializable {
      * @param weather
      * @param main
      */
-    public List(Integer dt, Main main, ArrayList<Weather> weather, Clouds clouds, Wind wind, Snow snow, Sys sys, String dtTxt) {
+    public List(Integer dt, Main main, RealmList<Weather> weather, Clouds clouds, Wind wind, Snow snow, Sys sys, String dtTxt) {
         super();
         this.dt = dt;
         this.main = main;
@@ -82,11 +82,11 @@ public class List extends RealmObject implements Serializable {
         this.main = main;
     }
 
-    public ArrayList<Weather> getWeather() {
+    public RealmList<Weather> getWeather() {
         return weather;
     }
 
-    public void setWeather(ArrayList<Weather> weather) {
+    public void setWeather(RealmList<Weather> weather) {
         this.weather = weather;
     }
 

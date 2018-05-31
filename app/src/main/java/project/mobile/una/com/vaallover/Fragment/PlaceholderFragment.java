@@ -33,7 +33,7 @@ public class PlaceholderFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main_menu, container, false);
-        TextView textView = rootView.findViewById(R.id.section_label);
+        TextView textView = rootView.findViewById(R.id.main_menu_current_clouds);
         textView.setText(getString(R.string.section_format, getArguments() != null ?
                 getArguments().getInt(ARG_SECTION_NUMBER) : 0));
         return rootView;

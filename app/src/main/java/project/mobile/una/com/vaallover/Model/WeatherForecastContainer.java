@@ -5,11 +5,11 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 
-public class WeatherContainer extends RealmObject implements Serializable {
+public class WeatherForecastContainer extends RealmObject implements Serializable {
 
     @SerializedName("cod")
     @Expose
@@ -22,7 +22,7 @@ public class WeatherContainer extends RealmObject implements Serializable {
     private Integer cnt;
     @SerializedName("list")
     @Expose
-    private ArrayList<List> list = null;
+    private RealmList<List> list = null;
     @SerializedName("city")
     @Expose
     private City city;
@@ -31,7 +31,7 @@ public class WeatherContainer extends RealmObject implements Serializable {
      * No args constructor for use in serialization
      * 
      */
-    public WeatherContainer() {
+    public WeatherForecastContainer() {
     }
 
     /**
@@ -42,7 +42,7 @@ public class WeatherContainer extends RealmObject implements Serializable {
      * @param list
      * @param city
      */
-    public WeatherContainer(String cod, Double message, Integer cnt, ArrayList<List> list, City city) {
+    public WeatherForecastContainer(String cod, Double message, Integer cnt, RealmList<List> list, City city) {
         super();
         this.cod = cod;
         this.message = message;
@@ -75,11 +75,11 @@ public class WeatherContainer extends RealmObject implements Serializable {
         this.cnt = cnt;
     }
 
-    public ArrayList<List> getList() {
+    public RealmList<List> getList() {
         return list;
     }
 
-    public void setList(ArrayList<List> list) {
+    public void setList(RealmList<List> list) {
         this.list = list;
     }
 

@@ -3,4 +3,7 @@
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="stringplaceholder">STRINGPLACEHOLDER</string>
+    <string name="GPS_alert_title">GPS is settings</string>
+    <string name="GPS_alert_message">GPS is not enabled. Do you want to go to settings menu?</string>
+    <string name="GPS_alert_Button_ok">Location settings</string>
 </resources>

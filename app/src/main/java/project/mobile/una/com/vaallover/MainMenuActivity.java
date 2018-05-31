@@ -83,7 +83,10 @@ public class MainMenuActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                enableLocationTrack();
+                if (isLocationEnabled())  //Si tiene el gps encendido entonces
+                        enableLocationTrack();
+                else
+                        checkGPSAlert(); //enviar alerta
             }
         });
 
@@ -110,8 +113,11 @@ public class MainMenuActivity extends AppCompatActivity {
                         // Persist your data in a transaction
                         realm.beginTransaction();
                         realm.deleteAll();
-                        realm.insert(response);
+                        currentWeather = realm.copyFromRealm(response);
                         realm.commitTransaction();
+
+                        mSectionsPagerAdapter.updateData(currentWeather);
+                        mSectionsPagerAdapter.notifyDataSetChanged();
 
                     }
                 }, new Response.ErrorListener() {
@@ -185,6 +191,9 @@ public class MainMenuActivity extends AppCompatActivity {
 
     public void onResume() {
         super.onResume();
+        if (realm.isClosed())
+            Realm.init(this);
+
         if (isLocationEnabled()) { //Si tiene el gps encendido entonces
             if (currentWeather == null) //Obtenga el clima de la ubicacion
                 enableLocationTrack();
@@ -203,19 +212,32 @@ public class MainMenuActivity extends AppCompatActivity {
 
     }
 
-    public void onPause() {
-        super.onPause();
-        locationManager.removeUpdates(locationListener);
+    @Override
+    protected void onStop() {
+        realm.close();
+        super.onStop();
     }
 
+    @Override
+    public void onPause() {
+        realm.close();
+        locationManager.removeUpdates(locationListener);
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        realm.close();
+        super.onDestroy();
+    }
 
     public void checkGPSAlert(){
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getApplicationContext());
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
-        alertDialog.setTitle("GPS is settings");
-        alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");
+        alertDialog.setTitle(R.string.GPS_alert_title);
+        alertDialog.setMessage(R.string.GPS_alert_message);
 
-        alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton(R.string.GPS_alert_Button_ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int which) {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 getApplicationContext().startActivity(intent);
@@ -223,7 +245,6 @@ public class MainMenuActivity extends AppCompatActivity {
             }
         });
 
-        alertDialog.setCancelable(false);
         alertDialog.show();
     }
 

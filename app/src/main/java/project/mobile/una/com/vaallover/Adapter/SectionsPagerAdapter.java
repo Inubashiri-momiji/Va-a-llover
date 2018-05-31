@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import project.mobile.una.com.vaallover.Fragment.ForeignWeatherFragment;
 import project.mobile.una.com.vaallover.Fragment.MainWeatherFragment;
 import project.mobile.una.com.vaallover.Fragment.PlaceholderFragment;
 import project.mobile.una.com.vaallover.Model.WeatherForecastContainer;
@@ -55,10 +56,11 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getItemPosition(@NonNull Object object) {
-        if (object instanceof MainWeatherFragment) {
-            //sent to FirstFragment and SecondFragment
+        if (object instanceof MainWeatherFragment)
             ((FragmentUpdate) object).update(currentWeather);
-        }
+        if (object instanceof ForeignWeatherFragment)
+            ((FragmentUpdate) object).update(forecastWeather);
+
         return super.getItemPosition(object);
     }
 

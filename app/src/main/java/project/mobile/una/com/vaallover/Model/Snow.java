@@ -6,7 +6,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class Snow implements Serializable {
+import io.realm.RealmObject;
+
+public class Snow extends RealmObject implements Serializable {
 
     @SerializedName("3h")
     @Expose

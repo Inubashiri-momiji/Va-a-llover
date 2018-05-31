@@ -6,11 +6,10 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
-import com.orm.SugarApp;
 
 import project.mobile.una.com.vaallover.utils.LruBitmapCache;
 
-public class BaseApplication extends SugarApp {
+public class BaseApplication{
 
     public static final String TAG = BaseApplication.class
             .getSimpleName();
@@ -20,9 +19,9 @@ public class BaseApplication extends SugarApp {
 
     private static BaseApplication mInstance;
 
-    @Override
+
     public void onCreate() {
-        super.onCreate();
+
         mInstance = this;
     }
 

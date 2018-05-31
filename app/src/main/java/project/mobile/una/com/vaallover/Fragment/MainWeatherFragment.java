@@ -25,8 +25,7 @@ public class MainWeatherFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main_menu, container, false);
 
         TextView textView = rootView.findViewById(R.id.section_label);
-        textView.setText(getString(R.string.section_format, getArguments() != null ?
-                getArguments().getInt(ARG_SECTION_NUMBER) : 0));
+        //textView.setText(getString(R.string.section_format, getArguments() != null ?  getArguments().getInt(ARG_SECTION_NUMBER) : 0));
 
         return rootView;
     }

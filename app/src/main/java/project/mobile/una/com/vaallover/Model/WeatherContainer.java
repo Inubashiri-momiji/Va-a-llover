@@ -7,7 +7,9 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class WeatherContainer implements Serializable {
+import io.realm.RealmObject;
+
+public class WeatherContainer extends RealmObject implements Serializable {
 
     @SerializedName("cod")
     @Expose

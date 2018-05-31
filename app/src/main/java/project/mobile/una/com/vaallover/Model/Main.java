@@ -6,7 +6,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class Main implements Serializable {
+import io.realm.RealmObject;
+
+public class Main extends RealmObject implements Serializable {
 
     @SerializedName("temp")
     @Expose
@@ -19,19 +21,19 @@ public class Main implements Serializable {
     private Double tempMax;
     @SerializedName("pressure")
     @Expose
-    private Integer pressure;
+    private Double pressure;
     @SerializedName("sea_level")
     @Expose
     private Double seaLevel;
     @SerializedName("grnd_level")
     @Expose
-    private Integer grndLevel;
+    private Double grndLevel;
     @SerializedName("humidity")
     @Expose
-    private Integer humidity;
+    private Double humidity;
     @SerializedName("temp_kf")
     @Expose
-    private Integer tempKf;
+    private Double tempKf;
 
     /**
      * No args constructor for use in serialization
@@ -51,7 +53,7 @@ public class Main implements Serializable {
      * @param tempKf
      * @param tempMin
      */
-    public Main(Double temp, Double tempMin, Double tempMax, Integer pressure, Double seaLevel, Integer grndLevel, Integer humidity, Integer tempKf) {
+    public Main(Double temp, Double tempMin, Double tempMax, Double pressure, Double seaLevel, Double grndLevel, Double humidity, Double tempKf) {
         super();
         this.temp = temp;
         this.tempMin = tempMin;
@@ -87,11 +89,11 @@ public class Main implements Serializable {
         this.tempMax = tempMax;
     }
 
-    public Integer getPressure() {
+    public Double getPressure() {
         return pressure;
     }
 
-    public void setPressure(Integer pressure) {
+    public void setPressure(Double pressure) {
         this.pressure = pressure;
     }
 
@@ -103,27 +105,27 @@ public class Main implements Serializable {
         this.seaLevel = seaLevel;
     }
 
-    public Integer getGrndLevel() {
+    public Double getGrndLevel() {
         return grndLevel;
     }
 
-    public void setGrndLevel(Integer grndLevel) {
+    public void setGrndLevel(Double grndLevel) {
         this.grndLevel = grndLevel;
     }
 
-    public Integer getHumidity() {
+    public Double getHumidity() {
         return humidity;
     }
 
-    public void setHumidity(Integer humidity) {
+    public void setHumidity(Double humidity) {
         this.humidity = humidity;
     }
 
-    public Integer getTempKf() {
+    public Double getTempKf() {
         return tempKf;
     }
 
-    public void setTempKf(Integer tempKf) {
+    public void setTempKf(Double tempKf) {
         this.tempKf = tempKf;
     }
 

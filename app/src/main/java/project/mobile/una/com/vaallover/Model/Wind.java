@@ -6,7 +6,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class Wind implements Serializable {
+import io.realm.RealmObject;
+
+public class Wind extends RealmObject implements Serializable {
 
     @SerializedName("speed")
     @Expose

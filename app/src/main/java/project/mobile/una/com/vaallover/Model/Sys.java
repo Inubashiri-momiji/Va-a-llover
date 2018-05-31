@@ -6,7 +6,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class Sys implements Serializable {
+import io.realm.RealmObject;
+
+public class Sys extends RealmObject implements Serializable {
 
     @SerializedName("pod")
     @Expose

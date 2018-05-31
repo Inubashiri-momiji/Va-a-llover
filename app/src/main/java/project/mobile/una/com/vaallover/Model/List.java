@@ -7,7 +7,9 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class List implements Serializable {
+import io.realm.RealmObject;
+
+public class List extends RealmObject implements Serializable {
 
     @SerializedName("dt")
     @Expose

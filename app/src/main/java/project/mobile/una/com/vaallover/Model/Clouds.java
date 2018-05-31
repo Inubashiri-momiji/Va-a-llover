@@ -6,7 +6,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class Clouds implements Serializable {
+import io.realm.RealmObject;
+
+public class Clouds extends RealmObject implements Serializable {
 
     @SerializedName("all")
     @Expose

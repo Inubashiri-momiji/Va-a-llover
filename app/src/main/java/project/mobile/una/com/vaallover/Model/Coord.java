@@ -6,7 +6,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class Coord implements Serializable {
+import io.realm.RealmObject;
+
+public class Coord extends RealmObject implements Serializable {
 
     @SerializedName("lat")
     @Expose

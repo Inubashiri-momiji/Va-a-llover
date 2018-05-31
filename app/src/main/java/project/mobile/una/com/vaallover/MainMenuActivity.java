@@ -12,6 +12,7 @@ import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.util.ArrayMap;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,12 +20,23 @@ import android.support.v7.widget.Toolbar;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
+import java.util.Map;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import project.mobile.una.com.vaallover.Adapter.SectionsPagerAdapter;
+import project.mobile.una.com.vaallover.Model.WeatherContainer;
 import project.mobile.una.com.vaallover.base.BaseApplication;
+import project.mobile.una.com.vaallover.service.ServiceHandler;
 
 public class MainMenuActivity extends AppCompatActivity {
 
@@ -33,14 +45,16 @@ public class MainMenuActivity extends AppCompatActivity {
      * We use a {@link FragmentPagerAdapter} derivative, which will keep every loaded fragment in memory.
      * If this becomes too memory intensive, it may be best to switch to a {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-
+    ServiceHandler handler;
+    Map<String, Object> params;
     SectionsPagerAdapter mSectionsPagerAdapter;
     LocationManager locationManager;
     ViewPager mViewPager;
     LocationListener locationListener;
     int PERMISSION_ALL = 1;
     String[] PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-
+    // Get a Realm instance for this thread
+    Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +66,11 @@ public class MainMenuActivity extends AppCompatActivity {
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
+        // Initialize Realm (just once per application)
+        Realm.init(this);
+        realm = Realm.getDefaultInstance();
+        RealmConfiguration config = new RealmConfiguration.Builder().build();
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.pageViewContainer);
@@ -65,15 +84,33 @@ public class MainMenuActivity extends AppCompatActivity {
             }
         });
 
+
+        handler = new ServiceHandler();
+        params = new ArrayMap<>();
+
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 double Latitude = location.getLatitude();
                 double Longitude = location.getLongitude();
+                params.put("APPID","63dc9dd7b6386052325bd9c6885402a0");
+                params.put("lat", Latitude);
+                params.put("lon", Longitude);
                 //LatLng coordinates = new LatLng( location.getLatitude(),location.getLongitude());
 
+                handler.objectRequest("http://api.openweathermap.org/data/2.5/forecast", Request.Method.GET, params, WeatherContainer.class, new Response.Listener<WeatherContainer>() {
+                    @Override
+                    public void onResponse(WeatherContainer response) {
 
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //en caso de problemas ejecutar esto
+                        Log.d("my Weather", error.toString());
+                    }
+                });
             }
 
             @Override

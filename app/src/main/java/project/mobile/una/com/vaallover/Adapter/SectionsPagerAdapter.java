@@ -1,18 +1,14 @@
 package project.mobile.una.com.vaallover.Adapter;
 
-import android.content.Context;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import project.mobile.una.com.vaallover.Fragment.ForeignWeatherFragment;
+import project.mobile.una.com.vaallover.Fragment.ForecastWeatherFragment;
 import project.mobile.una.com.vaallover.Fragment.MainWeatherFragment;
 import project.mobile.una.com.vaallover.Fragment.PlaceholderFragment;
-import project.mobile.una.com.vaallover.Model.WeatherForecastContainer;
-import project.mobile.una.com.vaallover.Model.WeatherCurrentContainer;
 import project.mobile.una.com.vaallover.interfaces.FragmentUpdate;
 
 /**
@@ -33,7 +29,7 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
             case 0:
                 return new MainWeatherFragment();
             case 1:
-                return PlaceholderFragment.newInstance(position);
+                return new ForecastWeatherFragment();
 
                 default:
                     return PlaceholderFragment.newInstance(position);

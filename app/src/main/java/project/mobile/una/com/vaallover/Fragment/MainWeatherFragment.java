@@ -20,7 +20,6 @@ public class MainWeatherFragment extends Fragment implements FragmentUpdate {
     TextView country, morningTime, eveningTime, pressure, currentTemperature, maxTemperature, minTemperature, wetness, wind, clouds;
     WeatherCurrentContainer weather;
     Realm realm;
-    int updateCounter;
 
     public MainWeatherFragment() {
 
@@ -69,16 +68,14 @@ public class MainWeatherFragment extends Fragment implements FragmentUpdate {
         wind = rootView.findViewById(R.id.main_menu_current_wind);
         clouds = rootView.findViewById(R.id.main_menu_current_clouds);
         update();
-
-
         return rootView;
     }
 
     @Override
     public void update() {
-        if (realm.isClosed()) {
+        if (realm.isClosed())
             realm = Realm.getDefaultInstance();
-        }
+
         weather = realm.where(WeatherCurrentContainer.class).findFirst();
         try {
             country.setText(weather.getName());
@@ -91,8 +88,7 @@ public class MainWeatherFragment extends Fragment implements FragmentUpdate {
             wetness.setText(String.valueOf(weather.getMain().getHumidity()));
             wind.setText(String.valueOf(weather.getWind().getSpeed()));
             clouds.setText(String.valueOf(weather.getClouds().getAll()));
-        }catch (Exception e){
-            clouds.getText();
-        }
+        }catch (Exception ignored){}
+
     }
 }

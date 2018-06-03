@@ -28,12 +28,16 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import java.util.Locale;
 import java.util.Map;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmList;
+import io.realm.RealmResults;
 import project.mobile.una.com.vaallover.Adapter.SectionsPagerAdapter;
 import project.mobile.una.com.vaallover.Model.WeatherCurrentContainer;
+import project.mobile.una.com.vaallover.Model.WeatherForecastContainer;
 import project.mobile.una.com.vaallover.service.ServiceHandler;
 
 public class MainMenuActivity extends AppCompatActivity {
@@ -56,6 +60,7 @@ public class MainMenuActivity extends AppCompatActivity {
     // Get a Realm instance for this thread
     Realm realm;
     WeatherCurrentContainer currentWeather;
+    WeatherForecastContainer forecastWeather;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,15 +71,20 @@ public class MainMenuActivity extends AppCompatActivity {
 
         realm = Realm.getDefaultInstance();
         currentWeather = realm.where(WeatherCurrentContainer.class).findFirst();
+        forecastWeather = realm.where(WeatherForecastContainer.class).findFirst();
 
         if (currentWeather == null) {
             realm.beginTransaction();
             currentWeather = realm.createObject(WeatherCurrentContainer.class);
             realm.commitTransaction();
         }
+        if (forecastWeather == null) {
+            realm.beginTransaction();
+            forecastWeather = realm.createObject(WeatherForecastContainer.class);
+            realm.commitTransaction();
+        }
 
         // Set up the ViewPager with the sections adapter.
-
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -210,17 +220,92 @@ public class MainMenuActivity extends AppCompatActivity {
 
 
 
-    private void requestWeather(){
-        //handler.objectRequest("http://api.openweathermap.org/data/2.5/forecast", Request.Method.GET, params, WeatherForecastContainer.class, new Response.Listener<WeatherForecastContainer>() {
+    private void requestCurrentWeather(double Latitude, double Longitude){
+        params = new ArrayMap<>();
+        params.put("APPID","63dc9dd7b6386052325bd9c6885402a0");
+        params.put("lat", Latitude);
+        params.put("lon", Longitude);
+        if(Locale.getDefault().getLanguage().equals("en"))
+            params.put("units", "imperial");
+        else
+            params.put("units", "metric");
+
         handler.objectRequest("http://api.openweathermap.org/data/2.5/weather", Request.Method.GET, params, WeatherCurrentContainer.class, new Response.Listener<WeatherCurrentContainer>() {
             @Override
             public void onResponse(WeatherCurrentContainer response) {
+                final RealmResults<WeatherCurrentContainer> results = realm.where(WeatherCurrentContainer.class).findAll();
+                // Persist your data in a transaction
+                realm.beginTransaction();
+                results.deleteAllFromRealm();
+                realm.insert(response);
+                realm.commitTransaction();
+
+                mSectionsPagerAdapter.notifyDataSetChanged();
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //en caso de problemas ejecutar esto
+                Log.d("my Weather", error.toString());
+            }
+        });
+
+    }
+
+    public void requestForecastWeather(double Latitude, double Longitude){
+        params = new ArrayMap<>();
+        params.put("APPID","63dc9dd7b6386052325bd9c6885402a0");
+        params.put("lat", Latitude);
+        params.put("lon", Longitude);
+        if(Locale.getDefault().getLanguage().equals("en"))
+            params.put("units", "imperial");
+        else
+            params.put("units", "metric");
+        handler.objectRequest("http://api.openweathermap.org/data/2.5/forecast", Request.Method.GET, params, WeatherForecastContainer.class, new Response.Listener<WeatherForecastContainer>() {
+            @Override
+            public void onResponse(WeatherForecastContainer response) {
+
+                final RealmResults<WeatherForecastContainer> results = realm.where(WeatherForecastContainer.class).findAll();
 
                 // Persist your data in a transaction
                 realm.beginTransaction();
-                realm.deleteAll();
+                results.deleteAllFromRealm();
                 realm.insert(response);
                 realm.commitTransaction();
+
+                mSectionsPagerAdapter.notifyDataSetChanged();
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //en caso de problemas ejecutar esto
+                Log.d("my Weather", error.toString());
+            }
+        });
+    }
+
+    public void requestForecastWeather(String city){
+        params = new ArrayMap<>();
+        params.put("APPID","63dc9dd7b6386052325bd9c6885402a0");
+        params.put("q", city);
+        if(Locale.getDefault().getLanguage().equals("en"))
+            params.put("units", "imperial");
+        else
+            params.put("units", "metric");
+        handler.objectRequest("http://api.openweathermap.org/data/2.5/forecast", Request.Method.GET, params, WeatherForecastContainer.class, new Response.Listener<WeatherForecastContainer>() {
+            @Override
+            public void onResponse(WeatherForecastContainer response) {
+
+                final RealmResults<WeatherForecastContainer> results = realm.where(WeatherForecastContainer.class).findAll();
+
+                // Persist your data in a transaction
+                realm.beginTransaction();
+                results.deleteAllFromRealm();
+                realm.insert(response);
+                realm.commitTransaction();
+
                 mSectionsPagerAdapter.notifyDataSetChanged();
 
             }
@@ -253,12 +338,10 @@ public class MainMenuActivity extends AppCompatActivity {
             public void onLocationChanged(Location location) {
                 double Latitude = location.getLatitude();
                 double Longitude = location.getLongitude();
-                params.clear();
-                params.put("APPID","63dc9dd7b6386052325bd9c6885402a0");
-                params.put("lat", Latitude);
-                params.put("lon", Longitude);
-                //requestWeather();
+                //requestCurrentWeather(Latitude, Longitude);
+                //requestForecastWeather(Latitude, Longitude);
                 mSectionsPagerAdapter.notifyDataSetChanged();
+                locationManager.removeUpdates(locationListener);
             }
 
             @Override

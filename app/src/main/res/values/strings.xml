@@ -6,4 +6,6 @@
     <string name="GPS_alert_title">GPS is settings</string>
     <string name="GPS_alert_message">GPS is not enabled. Do you want to go to settings menu?</string>
     <string name="GPS_alert_Button_ok">Location settings</string>
+    <string name="fragment_forecast_Search">Search</string>
+    <string name="forecast_current_city">Current city:  </string>
 </resources>

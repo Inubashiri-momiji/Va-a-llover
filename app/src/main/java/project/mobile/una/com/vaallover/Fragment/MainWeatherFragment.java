@@ -9,6 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import io.realm.Realm;
 import project.mobile.una.com.vaallover.Model.Sys;
 import project.mobile.una.com.vaallover.Model.WeatherCurrentContainer;
@@ -17,7 +21,8 @@ import project.mobile.una.com.vaallover.interfaces.FragmentUpdate;
 
 public class MainWeatherFragment extends Fragment implements FragmentUpdate {
 
-    TextView country, morningTime, eveningTime, pressure, currentTemperature, maxTemperature, minTemperature, wetness, wind, clouds;
+    TextView country, morningTime, eveningTime, pressure, currentTemperature, maxTemperature,
+            minTemperature, wetness, wind, clouds, description, tempSymbol;
     WeatherCurrentContainer weather;
     Realm realm;
 
@@ -67,6 +72,8 @@ public class MainWeatherFragment extends Fragment implements FragmentUpdate {
         wetness = rootView.findViewById(R.id.main_menu_current_wetness);
         wind = rootView.findViewById(R.id.main_menu_current_wind);
         clouds = rootView.findViewById(R.id.main_menu_current_clouds);
+        description = rootView.findViewById(R.id.main_menu_description);
+        tempSymbol= rootView.findViewById(R.id.main_menu_actual_temperature_symbol);
         update();
         return rootView;
     }
@@ -79,15 +86,39 @@ public class MainWeatherFragment extends Fragment implements FragmentUpdate {
         weather = realm.where(WeatherCurrentContainer.class).findFirst();
         try {
             country.setText(weather.getName());
-            morningTime.setText(String.valueOf(weather.getSys().getSunrise()));
-            eveningTime.setText(String.valueOf(weather.getSys().getSunset()));
-            pressure.setText(String.valueOf(weather.getMain().getPressure()));
+            description.setText(weather.getWeather().get(0).getDescription());
             currentTemperature.setText(String.valueOf(weather.getMain().getTemp()));
-            maxTemperature.setText(String.valueOf(weather.getMain().getTempMax()));
-            minTemperature.setText(String.valueOf(weather.getMain().getTempMin()));
-            wetness.setText(String.valueOf(weather.getMain().getHumidity()));
-            wind.setText(String.valueOf(weather.getWind().getSpeed()));
-            clouds.setText(String.valueOf(weather.getClouds().getAll()));
+
+            Date date = new Date((long)weather.getSys().getSunrise() * 1000);
+            String time = new SimpleDateFormat("h:mm a", Locale.getDefault()).format(date);
+            morningTime.setText(time);
+
+            date = new Date((long)weather.getSys().getSunset() * 1000);
+            time = new SimpleDateFormat("h:mm a", Locale.getDefault()).format(date);
+            eveningTime.setText(time);
+
+            pressure.setText(String.format("%s hPa", String.valueOf(weather.getMain().getPressure())));
+            wetness.setText(String.format("%s %%", String.valueOf(weather.getMain().getHumidity())));
+
+            if(Locale.getDefault().getLanguage().equals("en")) {
+            //imperial
+                tempSymbol.setText("°F");
+                maxTemperature.setText(String.format("%s °F", String.valueOf(weather.getMain().getTempMax())));
+                minTemperature.setText(String.format("%s °F", String.valueOf(weather.getMain().getTempMin())));
+                wind.setText(String.format("%s mph", String.valueOf(weather.getWind().getSpeed())));
+            }
+            else {
+            //metric
+                tempSymbol.setText("℃");
+                maxTemperature.setText(String.format("%s ℃", String.valueOf(weather.getMain().getTempMax())));
+                minTemperature.setText(String.format("%s ℃", String.valueOf(weather.getMain().getTempMin())));
+                wind.setText(String.format("%s mps", String.valueOf(weather.getWind().getSpeed())));
+            }
+
+            clouds.setText(String.format("%s %%", String.valueOf(weather.getClouds().getAll())));
+
+
+
         }catch (Exception ignored){}
 
     }

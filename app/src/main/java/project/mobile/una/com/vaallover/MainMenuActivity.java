@@ -9,6 +9,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.provider.Settings;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.util.ArrayMap;
@@ -32,8 +33,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
-import io.realm.RealmList;
 import io.realm.RealmResults;
 import project.mobile.una.com.vaallover.Adapter.SectionsPagerAdapter;
 import project.mobile.una.com.vaallover.Model.WeatherCurrentContainer;
@@ -55,6 +54,7 @@ public class MainMenuActivity extends AppCompatActivity {
     LocationManager locationManager;
     ViewPager mViewPager;
     LocationListener locationListener;
+    CoordinatorLayout layout;
     int PERMISSION_ALL = 1;
     String[] PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
     // Get a Realm instance for this thread
@@ -77,7 +77,9 @@ public class MainMenuActivity extends AppCompatActivity {
             realm.beginTransaction();
             currentWeather = realm.createObject(WeatherCurrentContainer.class);
             realm.commitTransaction();
-        }
+        }else
+            changeWallpaper();
+
         if (forecastWeather == null) {
             realm.beginTransaction();
             forecastWeather = realm.createObject(WeatherForecastContainer.class);
@@ -225,10 +227,14 @@ public class MainMenuActivity extends AppCompatActivity {
         params.put("APPID","63dc9dd7b6386052325bd9c6885402a0");
         params.put("lat", Latitude);
         params.put("lon", Longitude);
-        if(Locale.getDefault().getLanguage().equals("en"))
+        if(Locale.getDefault().getLanguage().equals("en")) {
             params.put("units", "imperial");
-        else
+            params.put("lang", "en");
+        }
+        else {
             params.put("units", "metric");
+            params.put("lang", Locale.getDefault().getLanguage());
+        }
 
         handler.objectRequest("http://api.openweathermap.org/data/2.5/weather", Request.Method.GET, params, WeatherCurrentContainer.class, new Response.Listener<WeatherCurrentContainer>() {
             @Override
@@ -239,8 +245,9 @@ public class MainMenuActivity extends AppCompatActivity {
                 results.deleteAllFromRealm();
                 realm.insert(response);
                 realm.commitTransaction();
-
+                currentWeather = response;
                 mSectionsPagerAdapter.notifyDataSetChanged();
+                changeWallpaper();
 
             }
         }, new Response.ErrorListener() {
@@ -258,10 +265,15 @@ public class MainMenuActivity extends AppCompatActivity {
         params.put("APPID","63dc9dd7b6386052325bd9c6885402a0");
         params.put("lat", Latitude);
         params.put("lon", Longitude);
-        if(Locale.getDefault().getLanguage().equals("en"))
+        if(Locale.getDefault().getLanguage().equals("en")) {
             params.put("units", "imperial");
-        else
+            params.put("lang", "en");
+        }
+        else {
             params.put("units", "metric");
+            params.put("lang", Locale.getDefault().getLanguage());
+        }
+
         handler.objectRequest("http://api.openweathermap.org/data/2.5/forecast", Request.Method.GET, params, WeatherForecastContainer.class, new Response.Listener<WeatherForecastContainer>() {
             @Override
             public void onResponse(WeatherForecastContainer response) {
@@ -290,10 +302,15 @@ public class MainMenuActivity extends AppCompatActivity {
         params = new ArrayMap<>();
         params.put("APPID","63dc9dd7b6386052325bd9c6885402a0");
         params.put("q", city);
-        if(Locale.getDefault().getLanguage().equals("en"))
+        if(Locale.getDefault().getLanguage().equals("en")) {
             params.put("units", "imperial");
-        else
+            params.put("lang", "en");
+        }
+        else {
             params.put("units", "metric");
+            params.put("lang", Locale.getDefault().getLanguage());
+        }
+
         handler.objectRequest("http://api.openweathermap.org/data/2.5/forecast", Request.Method.GET, params, WeatherForecastContainer.class, new Response.Listener<WeatherForecastContainer>() {
             @Override
             public void onResponse(WeatherForecastContainer response) {
@@ -323,6 +340,7 @@ public class MainMenuActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         mViewPager = findViewById(R.id.pageViewContainer);
         fab = findViewById(R.id.fab);
+        layout = findViewById(R.id.main_content);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         currentWeather = new WeatherCurrentContainer();
@@ -338,9 +356,9 @@ public class MainMenuActivity extends AppCompatActivity {
             public void onLocationChanged(Location location) {
                 double Latitude = location.getLatitude();
                 double Longitude = location.getLongitude();
-                //requestCurrentWeather(Latitude, Longitude);
-                //requestForecastWeather(Latitude, Longitude);
-                mSectionsPagerAdapter.notifyDataSetChanged();
+                requestCurrentWeather(Latitude, Longitude);
+                requestForecastWeather(Latitude, Longitude);
+                //mSectionsPagerAdapter.notifyDataSetChanged();
                 locationManager.removeUpdates(locationListener);
             }
 
@@ -359,6 +377,67 @@ public class MainMenuActivity extends AppCompatActivity {
 
             }
         };
+    }
+
+    private void changeWallpaper(){
+        if (currentWeather.getWeather().get(0) != null) {
+            switch (currentWeather.getWeather().get(0).getIcon()){
+                case "01d": //clear sky
+                    layout.setBackgroundResource(R.drawable.clear);
+                    break;
+                case "01n": //clear sky
+                    layout.setBackgroundResource(R.drawable.nclear);
+                    break;
+                case "02d": //few clouds
+                    layout.setBackgroundResource(R.drawable.someclouds);
+                    break;
+                case "02n": //few clouds
+                    layout.setBackgroundResource(R.drawable.nsomecloud);
+                    break;
+                case "03d": //scattered clouds
+                    layout.setBackgroundResource(R.drawable.clouds);
+                    break;
+                case "03n": //scattered clouds
+                    layout.setBackgroundResource(R.drawable.nclouds);
+                    break;
+                case "04d": // broken clouds
+                    layout.setBackgroundResource(R.drawable.clouds);
+                    break;
+                case "04n": // broken clouds
+                    layout.setBackgroundResource(R.drawable.nclouds);
+                    break;
+                case "09d": // shower rain
+                    layout.setBackgroundResource(R.drawable.rain);
+                    break;
+                case "09n": // shower rain
+                    layout.setBackgroundResource(R.drawable.nrain);
+                    break;
+                case "10d": //rain
+                    layout.setBackgroundResource(R.drawable.rain);
+                    break;
+                case "10n": //rain
+                    layout.setBackgroundResource(R.drawable.nrain);
+                    break;
+                case "11d": //thunderstorm
+                    layout.setBackgroundResource(R.drawable.thunder);
+                    break;
+                case "11n": //thunderstorm
+                    layout.setBackgroundResource(R.drawable.nthunder);
+                    break;
+                case "13d": //snow
+                    layout.setBackgroundResource(R.drawable.snow);
+                    break;
+                case "13n": //snow
+                    layout.setBackgroundResource(R.drawable.nsnow);
+                    break;
+                case "50d": //mist
+                    layout.setBackgroundResource(R.drawable.fog);
+                    break;
+                case "50n": //mist
+                    layout.setBackgroundResource(R.drawable.nfog);
+                    break;
+            }
+        }
     }
 
 }

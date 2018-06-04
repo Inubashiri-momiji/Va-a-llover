@@ -1,5 +1,7 @@
 package project.mobile.una.com.vaallover;
 
+
+
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -335,9 +337,9 @@ public class MainMenuActivity extends AppCompatActivity {
             public void onLocationChanged(Location location) {
                 double Latitude = location.getLatitude();
                 double Longitude = location.getLongitude();
-                //requestCurrentWeather(Latitude, Longitude);
-                //requestForecastWeather(Latitude, Longitude);
-                mSectionsPagerAdapter.notifyDataSetChanged();
+                requestCurrentWeather(Latitude, Longitude);
+                requestForecastWeather(Latitude, Longitude);
+                //mSectionsPagerAdapter.notifyDataSetChanged();
                 locationManager.removeUpdates(locationListener);
             }
 
@@ -359,64 +361,129 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     private void changeWallpaper(){
-        if (currentWeather.getWeather().get(0) != null) {
-            switch (currentWeather.getWeather().get(0).getIcon()){
-                case "01d": //clear sky
-                    layout.setBackgroundResource(R.drawable.clear);
-                    break;
-                case "01n": //clear sky
-                    layout.setBackgroundResource(R.drawable.nclear);
-                    break;
-                case "02d": //few clouds
-                    layout.setBackgroundResource(R.drawable.someclouds);
-                    break;
-                case "02n": //few clouds
-                    layout.setBackgroundResource(R.drawable.nsomecloud);
-                    break;
-                case "03d": //scattered clouds
-                    layout.setBackgroundResource(R.drawable.clouds);
-                    break;
-                case "03n": //scattered clouds
-                    layout.setBackgroundResource(R.drawable.nclouds);
-                    break;
-                case "04d": // broken clouds
-                    layout.setBackgroundResource(R.drawable.clouds);
-                    break;
-                case "04n": // broken clouds
-                    layout.setBackgroundResource(R.drawable.nclouds);
-                    break;
-                case "09d": // shower rain
-                    layout.setBackgroundResource(R.drawable.rain);
-                    break;
-                case "09n": // shower rain
-                    layout.setBackgroundResource(R.drawable.nrain);
-                    break;
-                case "10d": //rain
-                    layout.setBackgroundResource(R.drawable.rain);
-                    break;
-                case "10n": //rain
-                    layout.setBackgroundResource(R.drawable.nrain);
-                    break;
-                case "11d": //thunderstorm
-                    layout.setBackgroundResource(R.drawable.thunder);
-                    break;
-                case "11n": //thunderstorm
-                    layout.setBackgroundResource(R.drawable.nthunder);
-                    break;
-                case "13d": //snow
-                    layout.setBackgroundResource(R.drawable.snow);
-                    break;
-                case "13n": //snow
-                    layout.setBackgroundResource(R.drawable.nsnow);
-                    break;
-                case "50d": //mist
-                    layout.setBackgroundResource(R.drawable.fog);
-                    break;
-                case "50n": //mist
-                    layout.setBackgroundResource(R.drawable.nfog);
-                    break;
+        try {
+            if (currentWeather.getWeather().get(0) != null) {
+                switch (currentWeather.getWeather().get(0).getIcon()) {
+                    case "01d": //clear sky
+                        layout.setBackgroundResource(R.drawable.clear);
+                        break;
+                    case "01n": //clear sky
+                        layout.setBackgroundResource(R.drawable.nclear);
+                        break;
+                    case "02d": //few clouds
+                        layout.setBackgroundResource(R.drawable.someclouds);
+                        break;
+                    case "02n": //few clouds
+                        layout.setBackgroundResource(R.drawable.nsomecloud);
+                        break;
+                    case "03d": //scattered clouds
+                        layout.setBackgroundResource(R.drawable.clouds);
+                        break;
+                    case "03n": //scattered clouds
+                        layout.setBackgroundResource(R.drawable.nclouds);
+                        break;
+                    case "04d": // broken clouds
+                        layout.setBackgroundResource(R.drawable.clouds);
+                        break;
+                    case "04n": // broken clouds
+                        layout.setBackgroundResource(R.drawable.nclouds);
+                        break;
+                    case "09d": // shower rain
+                        layout.setBackgroundResource(R.drawable.rain);
+                        break;
+                    case "09n": // shower rain
+                        layout.setBackgroundResource(R.drawable.nrain);
+                        break;
+                    case "10d": //rain
+                        layout.setBackgroundResource(R.drawable.rain);
+                        break;
+                    case "10n": //rain
+                        layout.setBackgroundResource(R.drawable.nrain);
+                        break;
+                    case "11d": //thunderstorm
+                        layout.setBackgroundResource(R.drawable.thunder);
+                        break;
+                    case "11n": //thunderstorm
+                        layout.setBackgroundResource(R.drawable.nthunder);
+                        break;
+                    case "13d": //snow
+                        layout.setBackgroundResource(R.drawable.snow);
+                        break;
+                    case "13n": //snow
+                        layout.setBackgroundResource(R.drawable.nsnow);
+                        break;
+                    case "50d": //mist
+                        layout.setBackgroundResource(R.drawable.fog);
+                        break;
+                    case "50n": //mist
+                        layout.setBackgroundResource(R.drawable.nfog);
+                        break;
+                }
             }
-        }
+        }catch (Exception ignored){}
     }
 
 }
+/*
+		                                                       ██
+		                                                      █░█
+		            █                     ████              ██░░██
+		            ███                  █▓▓▓▓███          █▒░░░░██
+		            █░░█               ██▓▓▓▓▓▓▓███       █▒░░░░░░█
+		           ██░░░██            █▓▓▓▓▓▓▓▓▓▓▓▓██    █▒░░░░░░░░█
+		          ██░░░░░░██        ██▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓██ █▒░░░░░░░░░██
+		          █░░░░░░░░░██     █▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓██▒░░░░░░░░░░░█
+		         █░░░░░░░░░░░░██  █▓▓▓▓▓▓████▓▓▓▓▓▓▓▓▓█▒░░░░░░░█▒░░░░█      desarrollado por
+		         █░░░░░░░░░░░░░███▓▓▓████░░░░█████▓▓▓█▒░░░░░░░░█▒░░░░█     Claudio Umaña Arias
+		         █░░░░░░░░░░░░░░░████░░░░░░░░░░░░░███▒░░░░░░░░█▒▒░░░░██
+		        ██░░█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▒▒▒░░░░█
+		        █░░░█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█████░░░██
+		        █░░▒██░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█     █░░░█
+		        █░▒█  █░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█     █░░░█
+		        █░▒█ █░░░█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█    █▒░░░██
+		       ██░█ █░░░█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█   █▒▒░░░░█
+		       █░█ █░░░█░░░░░░░░░░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█   █▒░░░░█
+		       █░░█ █░█░░░░░░░░░░░░░░░░░░░░░░░░░█░░░░░░░░░█░░░░█  █░░░░░█
+		       █░█ █░░█░░░░░░░█░░░░░░░░░░░░░░░░░█░░░░░░░░░░█░░█   █░░░░░███
+		       █░██░░█░░░░░░░░█░░░░░░░░░░░░░░░░░░█░░░░░░░░░█░█    █░░░░░████   ██
+		       █░█ ██░░░░░░░░░█░░░░░░░░░░░░░░░░░░█░░░░░░░░░█░█    █░░░░░██ ██ ██ █
+		       █░▒█ █░░█░░░░░░█░░░░░░░░░░░░░░░░░░░█░░░░░░░░░██▄   █░░░░░██ ███    █
+		       █░█ █░░░█░░░░░░█░░░░░░░░░░░░░░░░░░▒█░░░░░░░░░░█▒███▒░░░░░█████     █
+		      ██░░██░░░█░░░░░░█░░░░░░░░░░░░░░░░░░▒█░░░░░░░░░░█▒░░░░░░░░░░██       ██
+		     ███░░█░░░█░░░░░░▒█░░░░░░░░░░░░░░░░░░▒▒█░░░░░░░░░█▒░░░░░░░░░░█         ██
+		     █ █░░█░░░█░░░░░░▒█░░░░░░░░░░░░░░░░░░▒▒█░░░░░░░▒▒█▒░░░░░░░░░░░█         █
+		   ███████░░░░█░░░░░░▒█░░░░░░░░░░░░░░░░░▒▒▒▒█░░░░░▒▒▒█▒░░░░░░░░░░░██         █
+		  ██ ██ ██░░░░░█░░░░░▒▒█░░░░░░░░░░░░░░░░▒▒▒█ █░░▒▒▒▒█▒░░░░░░░░░░░░░█         █
+		  █     █░░░░░░█░░░░░▒▒█░░░░░░░░░░░░░░░░▒▒▒█ █░░▒▒▒▓█▒░░░░░░░░░░░░░██        ██
+		 ██     █░░░░░░█░░░░░▒▒█░░▒░░░░░░░░░░░▒▒▒▒██ █▒▒▒▒▒█▒░░░░░░░░░░░░░░▒█        ██
+		 █      █░░░░░░█░░░░░▒▒▒█░▒▒▒▒▒░░░░░░▒▒▒██    █▒▒▒▒█▒░░░░░░░░░░░░░░▒██     ███
+		 █     █░░░░░░▒██░░░░▒▒█ █▒▒▒▒▒▒▒▒▒▒▒▒██      █████▒░░░░░░░░░░░░░░░▒▒█    ███
+		  █    █░░░░░░▒▒█░░▒▒▒█   ███▒▒▒▒▒▒▒██  ████████████░░░░░░░░░░░░░░░▒▒██  █
+		 ██    █░░░░░░▒▒██░▒▒▒█      ███▒▒██  ████████▓▓▓▓▓█░░░░░░░░░░░░░░░▒▒▒███
+		 █    █░░░░░░░▒▒▒█▒▒▒▒█         ██        █▓▓▓▓▓▓▓▓█░░░░░░░░░░░░░░░▒▒▒██
+		 █    █░░░░░░░▒▒▒▒█▒▒▒█  █████            █▓▓▓▓▓▓▓▓█░░░░░░░░░░░░░░░▒▒▒██
+		 █    █░░░░░░░▒▒▒▒▒██▒█████▓▓▓█           █▓▓▓▓▓▓▓▓█░░░░░░░░░░░░░░▒▒▒▒▒██
+		 ██   █░░░░░░░▒▒▒▒▒████ █▓▓▓▓▓█           █▓▓▓▓▓▓▓▓█░░░░░░░░░░░░░▒▒▒▒▒▒██
+		  █████░░░░░░▒▒▒▒▒▒█     █▓▓▓▓█            █▓▓▓▓▓▓██░░░░░░░░░░░░▒▒▒▒▒▒▒██
+		    ██░░░░░░░▒▒▒▒▒▒▒█    █▓▓▓▓█             ██▓▓████░░░░░░░░░░░▒▒▒▒▒▒▒▒██
+		    ██░░░░░░░▒▒▒▒▒▒█      █▓▓▓█               ██   █░░░░░░░░░░░▒▒▒▒▒▒▒▒▒█
+		    ██░░░░░░░▒▒▒▒▒▒█      █▓▓█                    █░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒█
+		    ██░░░░░░░▒▒▒▒▒█        ██                    █░░░░░░░░░░░░▒▒▒▒▒▒████
+		    ██░░░░░░░▒▒▒▒▒█                    ▄▄▄      █░▒▒█░░░░░░░░▒▒▒▒▒▒█
+		    ██░░░░░░░▒▒▒▒▒█                   ▀ ▄ ▀    ██████░░░░░░░▒▒▒▒▒▒█
+		    ██░░░░░░▒▒▒▒▒▒█                ▄   ▄▀           █░░░░░░▒▒▒▒▒▒█
+		    ██░░░░░▒▒▒▒▒▒▒▒█          ▄   ▄▀▄▄▄▀            █░░░░░▒▒▒▒▒▒█
+		    ██░░░░░▒▒▒▒▒▒▒▒▒█         ▀▄▄▄▀                █░░░░▒▒▒▒▒▒██
+		    ██░░░░░▒▒▒▒▒▒▒▒▒▒██                           ██░░░▒▒▒▒▒▒██
+		    ██░░░░░▒▒▒▒▒▒▒▒▒▒▒▒██                      ███ █░▒▒▒▒▒▒██
+		    ██░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒████             █████   █▒▒▒▒▒████
+		     █░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒█████████████        █▒██████
+		     ██░░█▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒███                  ██  █
+		       ██ ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒███    ███              █
+		            ███▒▒▒▒▒▒▒▒▒▒▒▒▒██ █   █   ██          ██
+		              ███████████████   █ █      █        ██
+		                   █████████     █        █    ███
+		                                 █        █ ███
+		                                  ██     ████
+		                                    ██████
+* */

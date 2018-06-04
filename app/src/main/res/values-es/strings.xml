@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Va a llover</string>
+    <string name="GPS_alert_title">Configuración de GPS</string>
+    <string name="GPS_alert_message">El servicio de GPS no está activado, ¿Deseas ir al menú de configuración de GPS?</string>
+    <string name="GPS_alert_Button_ok">Configuración de ubicación</string>
+    <string name="fragment_forecast_Search">Buscar</string>
+    <string name="forecast_current_city">Ciudad actual:</string>
+    <string name="fragment_main_pressure">Presión</string>
+    <string name="fragment_main_wetness">Humedad</string>
+    <string name="fragment_main_wind">Viento</string>
+    <string name="fragment_main_cloud">Nubes</string>
+    <string name="fragment_main_sunrise">Amanecer</string>
+    <string name="fragment_main_sunset">Atardecer</string>
+</resources>

@@ -15,6 +15,7 @@
         android:layout_height="wrap_content">
         <EditText
             style="@style/Base.V7.Widget.AppCompat.EditText"
+            android:textColor="#CFD8DC"
             android:id="@+id/forecast_search_criteria"
             android:layout_weight="4"
             android:layout_width="wrap_content"

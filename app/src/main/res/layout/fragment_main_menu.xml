@@ -94,7 +94,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/appbar_padding_top"
                     android:fontFamily="@font/lemon"
-                    android:text="@string/ragment_main_min_temp"
+                    android:text="@string/fragment_main_min_temp"
                     android:textColor="#CFD8DC"
                     android:textSize="12sp" />
 

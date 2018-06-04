@@ -8,11 +8,13 @@
     tools:context=".MainMenuActivity">
 
     <LinearLayout
+        android:layout_margin="@dimen/fragment_margin_top"
         android:orientation="horizontal"
         android:weightSum="4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <EditText
+            style="@style/Base.V7.Widget.AppCompat.EditText"
             android:id="@+id/forecast_search_criteria"
             android:layout_weight="4"
             android:layout_width="wrap_content"
@@ -21,6 +23,9 @@
             android:inputType="text"
             tools:ignore="LabelFor" />
         <Button
+
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:background="#B0BEC5"
             android:layout_weight="0"
             android:id="@+id/forecast_button"
             android:text="@string/fragment_forecast_Search"
@@ -30,22 +35,32 @@
 
 
     <LinearLayout
-        android:orientation="horizontal"
-
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:weightSum="3"
+        android:orientation="horizontal">
+
         <TextView
-            android:gravity="start"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/candal"
+            android:gravity="center"
             android:text="@string/forecast_current_city"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:textAlignment="center"
+            android:textColor="#CFD8DC" />
+
         <TextView
-            android:gravity="end"
+            android:layout_weight="2"
             android:id="@+id/forecast_city_name"
-            android:text="@string/placeholder_string"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/candal"
+            android:gravity="start"
+            android:textAlignment="viewStart"
+            android:text="@string/placeholder_string"
+            android:textColor="#CFD8DC" />
     </LinearLayout>
 
     <FrameLayout

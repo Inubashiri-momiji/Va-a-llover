@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:textColor="#CFD8DC"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:text="@string/placeholder_hour"
+        android:id="@+id/forecast_9_hour_hour"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <ImageView
+        android:id="@+id/forecast_9_hour_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:weightSum="10"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:textAlignment="center"
+            android:layout_weight="6"
+            android:id="@+id/forecast_9_hour_current_temperature"
+            android:textColor="#CFD8DC"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:text="@string/placeholder_float"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:layout_weight="4"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/forecast_9_hour_max_temperature"
+                android:textColor="#CFD8DC"
+                android:textStyle="bold"
+                android:textSize="8sp"
+                android:text="@string/placeholder_float"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:ignore="SmallSp" />
+
+            <TextView
+                android:id="@+id/forecast_9_hour_min_temperature"
+                android:textColor="#CFD8DC"
+                android:textStyle="bold"
+                android:textSize="8sp"
+                android:text="@string/placeholder_float"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:ignore="SmallSp" />
+
+        </LinearLayout>
+    </LinearLayout> <!--Cierre de temperatura-->
+
+    <LinearLayout
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="☁"
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:textAlignment="viewStart"
+            android:id="@+id/forecast_9_hour_clouds"
+            android:textColor="#CFD8DC"
+            android:textSize="12sp"
+            android:text="@string/placeholder_float"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+
+            android:text="♒"
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/forecast_9_hour_wind"
+            android:textColor="#CFD8DC"
+            android:text="@string/placeholder_float"
+            android:textSize="12sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:text="💧"
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/forecast_9_hour_wetness"
+            android:textColor="#CFD8DC"
+            android:textSize="12sp"
+            android:text="@string/placeholder_float"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:text="⛢"
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+
+            android:id="@+id/forecast_9_hour_pressure"
+            android:textColor="#CFD8DC"
+            android:text="@string/placeholder_float"
+            android:textSize="12sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</LinearLayout>

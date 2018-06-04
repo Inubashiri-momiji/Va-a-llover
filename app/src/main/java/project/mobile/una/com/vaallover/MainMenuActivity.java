@@ -110,28 +110,7 @@ public class MainMenuActivity extends AppCompatActivity {
             checkGPSAlert(); //enviar alerta
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.weather_main_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+    
 
     public void onResume() {
         super.onResume();
@@ -356,9 +335,9 @@ public class MainMenuActivity extends AppCompatActivity {
             public void onLocationChanged(Location location) {
                 double Latitude = location.getLatitude();
                 double Longitude = location.getLongitude();
-                requestCurrentWeather(Latitude, Longitude);
-                requestForecastWeather(Latitude, Longitude);
-                //mSectionsPagerAdapter.notifyDataSetChanged();
+                //requestCurrentWeather(Latitude, Longitude);
+                //requestForecastWeather(Latitude, Longitude);
+                mSectionsPagerAdapter.notifyDataSetChanged();
                 locationManager.removeUpdates(locationListener);
             }
 

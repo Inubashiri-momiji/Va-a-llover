@@ -109,7 +109,9 @@ public class ForecastWeatherFragment extends Fragment implements FragmentUpdate 
         RecyclerView recyclerView = rootView.findViewById(R.id.weather_list);
         recyclerView.setAdapter(adapter);
 
-
+        if (weather == null){
+            update();
+        }
 
 
         //update();

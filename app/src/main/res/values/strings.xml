@@ -19,4 +19,6 @@
     <string name="fragment_main_sunrise">Sunrise</string>
     <string name="fragment_main_sunset">Sunset</string>
     <string name="fragment_main_temp_symbol">°F</string>
+    <string name="placeholder_day">Tuesday</string>
+    <string name="placeholder_hour">3:00 p.m</string>
 </resources>

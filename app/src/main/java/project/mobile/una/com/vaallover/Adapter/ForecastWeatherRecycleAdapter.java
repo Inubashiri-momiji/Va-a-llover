@@ -12,8 +12,14 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import io.realm.RealmList;
 import project.mobile.una.com.vaallover.Fragment.ForecastWeatherFragment;
@@ -24,37 +30,16 @@ import project.mobile.una.com.vaallover.R;
 public class ForecastWeatherRecycleAdapter extends RecyclerView.Adapter<ForecastWeatherRecycleAdapter.ViewHolder> {
 
     private final ForecastWeatherFragment mParentActivity;
-    private RealmList<List> mValues;
-    private HashMap<Integer, ArrayList<List>> data;
+    private HashMap<Integer, ArrayList<List>> mValues;
 
 
 
-    public ForecastWeatherRecycleAdapter(ForecastWeatherFragment parent, RealmList<List> items) {
+    public ForecastWeatherRecycleAdapter(ForecastWeatherFragment parent, HashMap<Integer, ArrayList<List>> items) {
         mValues = items;
         mParentActivity = parent;
-        data = new HashMap<>();
-        processData();
     }
 
-    public void processData(){
-        ArrayList<List> result = new ArrayList<>();
-        String dia;
-        int dayCounter = 0;
 
-        for (int i = 0; i<mValues.size(); i++) {
-            //Integer dia, ArrayList horas
-            dia = mValues.get(0).getDtTxt();
-
-            if (dia.contains("03:00:00"))
-                result = new ArrayList<>();
-
-            result.add(mValues.get(0));
-
-            if (dia.contains("21:00:00"))
-                data.put(dayCounter++, result);
-
-        }
-    }
 
 
     @NonNull
@@ -66,18 +51,101 @@ public class ForecastWeatherRecycleAdapter extends RecyclerView.Adapter<Forecast
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-        Weather wea = mValues.get(position).getWeather().get(0);
-        List info = mValues.get(position);
+        Date date = new Date();
+        SimpleDateFormat  time;
+        time = new SimpleDateFormat("h:mm a", Locale.getDefault());
+        time.setTimeZone(TimeZone.getTimeZone("GMT-0"));
+
+        List weather3h = mValues.get(position).get(0);
+        List weather6h = mValues.get(position).get(1);
+        List weather9h = mValues.get(position).get(2);
+        List weather12h = mValues.get(position).get(3);
+        List weather15h = mValues.get(position).get(4);
+        List weather18h = mValues.get(position).get(5);
+        List weather21h = mValues.get(position).get(6);
+
+        date = new Date(weather3h.getDt() * 1000L);
+
+        holder.hour3H.setText(time.format(date));
+        holder.pressure3H.setText(String.valueOf(weather3h.getMain().getPressure()));
+        holder.currentTemperature3h.setText(String.valueOf(weather3h.getMain().getTemp()));
+        holder.maxTemperature3h.setText(String.valueOf(weather3h.getMain().getTempMax()));
+        holder.minTemperature3h.setText(String.valueOf(weather3h.getMain().getTempMin()));
+        holder.wetness3h.setText(String.valueOf(weather3h.getMain().getHumidity()));
+        holder.wind3h.setText(String.valueOf(weather3h.getWind().getSpeed()));
+        holder.clouds3h.setText(String.valueOf(weather3h.getClouds().getAll()));
+        loadImage(holder.icon3H, weather3h.getWeather().get(0).getIcon());
 
 
+        date = new Date(weather6h.getDt() * 1000L);
+        holder.hour6H.setText(time.format(date));
+        holder.pressure6H.setText(String.valueOf(weather6h.getMain().getPressure()));
+        holder.currentTemperature6h.setText(String.valueOf(weather6h.getMain().getTemp()));
+        holder.maxTemperature6h.setText(String.valueOf(weather6h.getMain().getTempMax()));
+        holder.minTemperature6h.setText(String.valueOf(weather6h.getMain().getTempMin()));
+        holder.wetness6h.setText(String.valueOf(weather6h.getMain().getHumidity()));
+        holder.wind6h.setText(String.valueOf(weather6h.getWind().getSpeed()));
+        holder.clouds6h.setText(String.valueOf(weather6h.getClouds().getAll()));
+        loadImage(holder.icon6H, weather6h.getWeather().get(0).getIcon());
 
-        holder.pressure3H.setText(String.valueOf(info.getMain().getPressure()));
-        holder.currentTemperature3h.setText(String.valueOf(mValues.get(position).getMain().getTemp()));
-        holder.maxTemperature3h.setText(String.valueOf(mValues.get(position).getMain().getTempMax()));
-        holder.minTemperature3h.setText(String.valueOf(mValues.get(position).getMain().getTempMin()));
-        holder.wetness3h.setText(String.valueOf(mValues.get(position).getMain().getHumidity()));
-        holder.wind3h.setText(String.valueOf(mValues.get(position).getWind().getSpeed()));
-        holder.clouds3h.setText(String.valueOf(mValues.get(position).getClouds().getAll()));
+
+        date = new Date(weather9h.getDt() * 1000L);
+        holder.hour9H.setText(time.format(date));
+        holder.pressure9H.setText(String.valueOf(weather9h.getMain().getPressure()));
+        holder.currentTemperature9h.setText(String.valueOf(weather9h.getMain().getTemp()));
+        holder.maxTemperature9h.setText(String.valueOf(weather9h.getMain().getTempMax()));
+        holder.minTemperature9h.setText(String.valueOf(weather9h.getMain().getTempMin()));
+        holder.wetness9h.setText(String.valueOf(weather9h.getMain().getHumidity()));
+        holder.wind9h.setText(String.valueOf(weather9h.getWind().getSpeed()));
+        holder.clouds9h.setText(String.valueOf(weather9h.getClouds().getAll()));
+        loadImage(holder.icon9H, weather9h.getWeather().get(0).getIcon());
+
+
+        date = new Date(weather12h.getDt() * 1000L);
+        holder.hour12H.setText(time.format(date));
+        holder.pressure12H.setText(String.valueOf(weather12h.getMain().getPressure()));
+        holder.currentTemperature12h.setText(String.valueOf(weather12h.getMain().getTemp()));
+        holder.maxTemperature12h.setText(String.valueOf(weather12h.getMain().getTempMax()));
+        holder.minTemperature12h.setText(String.valueOf(weather12h.getMain().getTempMin()));
+        holder.wetness12h.setText(String.valueOf(weather12h.getMain().getHumidity()));
+        holder.wind12h.setText(String.valueOf(weather12h.getWind().getSpeed()));
+        holder.clouds12h.setText(String.valueOf(weather12h.getClouds().getAll()));
+        loadImage(holder.icon12H, weather12h.getWeather().get(0).getIcon());
+
+
+        date = new Date(weather15h.getDt() * 1000L);
+        holder.hour15H.setText(time.format(date));
+        holder.pressure15H.setText(String.valueOf(weather15h.getMain().getPressure()));
+        holder.currentTemperature15h.setText(String.valueOf(weather15h.getMain().getTemp()));
+        holder.maxTemperature15h.setText(String.valueOf(weather15h.getMain().getTempMax()));
+        holder.minTemperature15h.setText(String.valueOf(weather15h.getMain().getTempMin()));
+        holder.wetness15h.setText(String.valueOf(weather15h.getMain().getHumidity()));
+        holder.wind15h.setText(String.valueOf(weather15h.getWind().getSpeed()));
+        holder.clouds15h.setText(String.valueOf(weather15h.getClouds().getAll()));
+        loadImage(holder.icon15H, weather15h.getWeather().get(0).getIcon());
+
+
+        date = new Date(weather18h.getDt() * 1000L);
+        holder.hour18H.setText(time.format(date));
+        holder.pressure18H.setText(String.valueOf(weather18h.getMain().getPressure()));
+        holder.currentTemperature18h.setText(String.valueOf(weather18h.getMain().getTemp()));
+        holder.maxTemperature18h.setText(String.valueOf(weather18h.getMain().getTempMax()));
+        holder.minTemperature18h.setText(String.valueOf(weather18h.getMain().getTempMin()));
+        holder.wetness18h.setText(String.valueOf(weather18h.getMain().getHumidity()));
+        holder.wind18h.setText(String.valueOf(weather18h.getWind().getSpeed()));
+        holder.clouds18h.setText(String.valueOf(weather18h.getClouds().getAll()));
+        loadImage(holder.icon18H, weather18h.getWeather().get(0).getIcon());
+
+        date = new Date(weather21h.getDt() * 1000L);
+        holder.hour21H.setText(time.format(date));
+        holder.pressure21H.setText(String.valueOf(weather21h.getMain().getPressure()));
+        holder.currentTemperature21h.setText(String.valueOf(weather21h.getMain().getTemp()));
+        holder.maxTemperature21h.setText(String.valueOf(weather21h.getMain().getTempMax()));
+        holder.minTemperature21h.setText(String.valueOf(weather21h.getMain().getTempMin()));
+        holder.wetness21h.setText(String.valueOf(weather21h.getMain().getHumidity()));
+        holder.wind21h.setText(String.valueOf(weather21h.getWind().getSpeed()));
+        holder.clouds21h.setText(String.valueOf(weather21h.getClouds().getAll()));
+        loadImage(holder.icon21H, weather21h.getWeather().get(0).getIcon());
 
         holder.itemView.setTag(mValues.get(position));
     }
@@ -94,13 +162,13 @@ public class ForecastWeatherRecycleAdapter extends RecyclerView.Adapter<Forecast
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        final TextView pressure3H,  currentTemperature3h, maxTemperature3h, minTemperature3h, wetness3h, wind3h, clouds3h;
-        final TextView pressure6H,  currentTemperature6h, maxTemperature6h, minTemperature6h, wetness6h, wind6h, clouds6h;
-        final TextView pressure9H,  currentTemperature9h, maxTemperature9h, minTemperature9h, wetness9h, wind9h, clouds9h;
-        final TextView pressure12H, currentTemperature12h, maxTemperature12h, minTemperature12h, wetness12h, wind12h, clouds12h;
-        final TextView pressure15H,  currentTemperature15h, maxTemperature15h, minTemperature15h, wetness15h, wind15h, clouds15h;
-        final TextView pressure18H,  currentTemperature18h, maxTemperature18h, minTemperature18h, wetness18h, wind18h, clouds18h;
-        final TextView pressure21H,  currentTemperature21h, maxTemperature21h, minTemperature21h, wetness21h, wind21h, clouds21h;
+        final TextView hour3H, pressure3H,  currentTemperature3h, maxTemperature3h, minTemperature3h, wetness3h, wind3h, clouds3h;
+        final TextView hour6H, pressure6H,  currentTemperature6h, maxTemperature6h, minTemperature6h, wetness6h, wind6h, clouds6h;
+        final TextView hour9H, pressure9H,  currentTemperature9h, maxTemperature9h, minTemperature9h, wetness9h, wind9h, clouds9h;
+        final TextView hour12H, pressure12H, currentTemperature12h, maxTemperature12h, minTemperature12h, wetness12h, wind12h, clouds12h;
+        final TextView hour15H, pressure15H,  currentTemperature15h, maxTemperature15h, minTemperature15h, wetness15h, wind15h, clouds15h;
+        final TextView hour18H, pressure18H,  currentTemperature18h, maxTemperature18h, minTemperature18h, wetness18h, wind18h, clouds18h;
+        final TextView hour21H, pressure21H,  currentTemperature21h, maxTemperature21h, minTemperature21h, wetness21h, wind21h, clouds21h;
         final ImageView icon3H, icon6H, icon9H, icon12H, icon15H, icon18H, icon21H;
         final TextView day;
 
@@ -109,6 +177,7 @@ public class ForecastWeatherRecycleAdapter extends RecyclerView.Adapter<Forecast
 
             day = view.findViewById(R.id.forecast_Date);
 
+            hour3H = view.findViewById(R.id.forecast_3_hour_hour);
             pressure3H = view.findViewById(R.id.forecast_3_hour_pressure);
             icon3H = view.findViewById(R.id.forecast_3_hour_icon);
             currentTemperature3h = view.findViewById(R.id.forecast_3_hour_current_temperature);
@@ -118,6 +187,7 @@ public class ForecastWeatherRecycleAdapter extends RecyclerView.Adapter<Forecast
             wind3h = view.findViewById(R.id.forecast_3_hour_wind);
             clouds3h = view.findViewById(R.id.forecast_3_hour_clouds);
 
+            hour6H = view.findViewById(R.id.forecast_6_hour_hour);
             pressure6H = view.findViewById(R.id.forecast_6_hour_pressure);
             icon6H = view.findViewById(R.id.forecast_6_hour_icon);
             currentTemperature6h = view.findViewById(R.id.forecast_6_hour_current_temperature);
@@ -127,6 +197,7 @@ public class ForecastWeatherRecycleAdapter extends RecyclerView.Adapter<Forecast
             wind6h = view.findViewById(R.id.forecast_6_hour_wind);
             clouds6h = view.findViewById(R.id.forecast_6_hour_clouds);
 
+            hour9H = view.findViewById(R.id.forecast_9_hour_hour);
             pressure9H = view.findViewById(R.id.forecast_9_hour_pressure);
             icon9H = view.findViewById(R.id.forecast_9_hour_icon);
             currentTemperature9h = view.findViewById(R.id.forecast_9_hour_current_temperature);
@@ -136,6 +207,7 @@ public class ForecastWeatherRecycleAdapter extends RecyclerView.Adapter<Forecast
             wind9h = view.findViewById(R.id.forecast_9_hour_wind);
             clouds9h = view.findViewById(R.id.forecast_9_hour_clouds);
 
+            hour12H = view.findViewById(R.id.forecast_12_hour_hour);
             pressure12H = view.findViewById(R.id.forecast_12_hour_pressure);
             icon12H = view.findViewById(R.id.forecast_12_hour_icon);
             currentTemperature12h = view.findViewById(R.id.forecast_12_hour_current_temperature);
@@ -145,6 +217,7 @@ public class ForecastWeatherRecycleAdapter extends RecyclerView.Adapter<Forecast
             wind12h = view.findViewById(R.id.forecast_12_hour_wind);
             clouds12h = view.findViewById(R.id.forecast_12_hour_clouds);
 
+            hour15H = view.findViewById(R.id.forecast_15_hour_hour);
             pressure15H = view.findViewById(R.id.forecast_15_hour_pressure);
             icon15H = view.findViewById(R.id.forecast_15_hour_icon);
             currentTemperature15h = view.findViewById(R.id.forecast_15_hour_current_temperature);
@@ -154,6 +227,7 @@ public class ForecastWeatherRecycleAdapter extends RecyclerView.Adapter<Forecast
             wind15h = view.findViewById(R.id.forecast_15_hour_wind);
             clouds15h = view.findViewById(R.id.forecast_15_hour_clouds);
 
+            hour18H = view.findViewById(R.id.forecast_18_hour_hour);
             pressure18H = view.findViewById(R.id.forecast_18_hour_pressure);
             icon18H = view.findViewById(R.id.forecast_18_hour_icon);
             currentTemperature18h = view.findViewById(R.id.forecast_18_hour_current_temperature);
@@ -163,6 +237,7 @@ public class ForecastWeatherRecycleAdapter extends RecyclerView.Adapter<Forecast
             wind18h = view.findViewById(R.id.forecast_18_hour_wind);
             clouds18h = view.findViewById(R.id.forecast_18_hour_clouds);
 
+            hour21H = view.findViewById(R.id.forecast_21_hour_hour);
             pressure21H = view.findViewById(R.id.forecast_21_hour_pressure);
             icon21H = view.findViewById(R.id.forecast_21_hour_icon);
             currentTemperature21h = view.findViewById(R.id.forecast_21_hour_current_temperature);

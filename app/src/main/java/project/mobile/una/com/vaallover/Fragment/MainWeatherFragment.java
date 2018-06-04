@@ -89,11 +89,11 @@ public class MainWeatherFragment extends Fragment implements FragmentUpdate {
             description.setText(weather.getWeather().get(0).getDescription());
             currentTemperature.setText(String.valueOf(weather.getMain().getTemp()));
 
-            Date date = new Date((long)weather.getSys().getSunrise() * 1000);
+            Date date = new Date(weather.getSys().getSunrise() * 1000L);
             String time = new SimpleDateFormat("h:mm a", Locale.getDefault()).format(date);
             morningTime.setText(time);
 
-            date = new Date((long)weather.getSys().getSunset() * 1000);
+            date = new Date(weather.getSys().getSunset() * 1000L);
             time = new SimpleDateFormat("h:mm a", Locale.getDefault()).format(date);
             eveningTime.setText(time);
 

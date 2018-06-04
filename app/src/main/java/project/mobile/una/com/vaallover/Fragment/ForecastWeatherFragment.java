@@ -20,6 +20,8 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 import io.realm.Realm;
@@ -39,13 +41,13 @@ public class ForecastWeatherFragment extends Fragment implements FragmentUpdate 
     WeatherForecastContainer weather;
     Realm realm;
     ForecastWeatherRecycleAdapter adapter;
-    RealmList<List> forecast;
     Button submit;
     EditText query;
     TextView currentCity;
     String cityFormat;
     Place queryPlace;
     int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+    HashMap<Integer, ArrayList<List>> forecastOrganized;
 
     public ForecastWeatherFragment() {}
 
@@ -55,8 +57,8 @@ public class ForecastWeatherFragment extends Fragment implements FragmentUpdate 
 
         assert getArguments() != null;
         realm = Realm.getDefaultInstance();
-        forecast = new RealmList<>();
-        adapter = new ForecastWeatherRecycleAdapter(this, forecast);
+        forecastOrganized = new HashMap<>();
+        adapter = new ForecastWeatherRecycleAdapter(this, forecastOrganized);
     }
 
     @Override
@@ -143,13 +145,35 @@ public class ForecastWeatherFragment extends Fragment implements FragmentUpdate 
         weather = realm.where(WeatherForecastContainer.class).findFirst();
         try {
 
-           forecast.clear();
+           forecastOrganized.clear();
            cityFormat = weather.getCity().getName() + " ( " + weather.getCity().getCountry() + " )";
            currentCity.setText(cityFormat);
-           forecast.addAll(weather.getList());
+           processData();
            adapter.notifyDataSetChanged();
         }catch (Exception ignored){}
 
     }
+
+    public void processData(){
+        ArrayList<List> result = new ArrayList<>();
+        String dia;
+        int dayCounter = 0;
+
+        for (int i = 0; i<weather.getList().size(); i++) {
+            //Integer dia, ArrayList horas
+            dia = weather.getList().get(i).getDtTxt();
+
+            if (dia.contains("03:00:00"))
+                result = new ArrayList<>();
+
+            if (!dia.contains("00:00:00"))
+                result.add(weather.getList().get(i));
+
+            if (dia.contains("21:00:00"))
+                forecastOrganized.put(dayCounter++, result);
+
+        }
+    }
+
 }
 
